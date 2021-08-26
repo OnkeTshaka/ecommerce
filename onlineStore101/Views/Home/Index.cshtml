@@ -1,0 +1,86 @@
+﻿@model onlineStore101.ViewModels.HomeViewModel
+
+@{
+    ViewBag.Title = "Home Page";
+    bool isEmpty = !Model.Product.Any();
+}
+<div style="width:100%;">
+
+</div>
+
+<div class="row" style="margin-top:30px;">
+    <div class="col-md-3">
+        <div class="list-group">
+            @foreach (var item in Model.Category)
+            {
+                @*<a href="#" class="list-group-item">@item.Name</a>*@
+                @Html.ActionLink(item.Name, "/Index", new { category = item.Name }, htmlAttributes: new { @class = (item.Name.Equals(ViewBag.selectedCategory) ? "list-group-item" : "list-group-item"), @style = "color:#111;" });
+
+            }
+            @using (Html.BeginForm("/Index", "Home", FormMethod.Get, htmlAttributes: new { @class = "list-group-item" }))
+            {
+                <button class="btn btn-outline-light my-2 my-sm-0 mr-5 pull-right" type="submit" style="color:#111;height:50px;">Search</button>
+
+                if (Request.QueryString["category"] != null)
+                {
+                    <input type="hidden" name="category" value="@Request.QueryString["category"]" />
+                }
+                <input class="list-group-item" type="search" id="txtSearch" name="search" placeholder="Search Product..." aria-label="Search" style="float:right;margin-right:5px;width:300px;height:50px;">
+
+            }
+        </div>
+    </div>
+    <div class="col-md-9">
+        <div class="row">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h2 class="panel-title">Recent Laptop Ads</h2>
+                </div>
+                <div class="panel-body">
+@if (!string.IsNullOrEmpty(Request.QueryString["search"]) && isEmpty)
+{
+    <p class="text-center">No results match your search criteria!</p> }
+else if (isEmpty)
+{
+    <p class="text-center">The product list is empty!</p> }
+else
+{
+    foreach (var item in Model.Product)
+    {
+                        <div class="col-sm-4 col-lg-4 col-md-4">
+                            <div class="thumbnail">
+                                <a href="@Url.Action("Details", "Products", new { id = item.ID })">
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(item.Picture, 0, item.Picture.Length)" class="img-responsive img-thumbnail" style="width: 250px; height: 200px;" alt="" />
+                                </a>
+                                <div class="caption">
+                                    <h4 title="@item.Title">
+                                        @Html.ActionLink(item.Title, "Details", "Products", new { id = item.ID }, null)
+                                        @if (item.Quantity > 0)
+                                        {
+                                            using (Html.BeginForm("AddToCart", "ShoppingCart", new { productId = item.ID, url = "Index" }, FormMethod.Post))
+                                            {
+                                                <input type='submit' class='btn btn-success' value='Add to Cart'>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <p style="color:#ff0000">Out of Stock</p>
+                                        }
+                                    </h4>
+                                    <p>@Html.DisplayFor(modelItem => item.AccessoryBrand.Name), @Html.DisplayFor(modelItem => item.Ram) Ram, @Html.DisplayFor(modelItem => item.Processor) Processor, @Html.DisplayFor(modelItem => item.HardDisk) Hard Disk Size, @Html.DisplayFor(modelItem => item.Condition) Condition. @Html.DisplayFor(modelItem => item.Description)</p>
+                                </div>
+                                <div class="ratings">
+                                    <p title="@item.Currency.Name : @item.Price" class="pull-right"><i class="glyphicon glyphicon-tags"></i>&nbsp;&nbsp;@Html.DisplayFor(modelItem => item.Currency.ISOCode) @Html.DisplayFor(modelItem => item.Price)</p>
+                                    <p title="@item.City.Name, @item.State.Name, @item.Country.Name">
+                                        <i class="glyphicon glyphicon-map-marker"></i>&nbsp;@Html.DisplayFor(modelItem => item.City.Name)
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+    }
+}}
+                </div>
+            </div>
+        </div>
+</div>
+</div>

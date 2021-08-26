@@ -1,0 +1,89 @@
+﻿@model IEnumerable<onlineStore101.Models.Product>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.Label("Seller Information")
+        </th>
+        <th>
+            @Html.Label("Product Specs")
+        </th>
+        <th>
+            @Html.Label("Product")
+        </th>
+        <th>
+            @Html.Label("Operations")
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            <p>
+                @Html.DisplayFor(modelItem => item.Title)<br />
+                @Html.DisplayFor(modelItem => item.AccessoryBrand.Name)<br />
+                @Html.DisplayFor(modelItem => item.Category.Name)<br />
+                @Html.DisplayFor(modelItem => item.Quantity)<br />
+                @Html.DisplayFor(modelItem => item.Price)<br />
+                @Html.DisplayFor(modelItem => item.Description)<br />
+                @Html.DisplayFor(modelItem => item.Slug)<br />
+                @Html.DisplayFor(modelItem => item.PostingTime)<br />
+                @Html.DisplayFor(modelItem => item.OperatingSystem)<br />
+
+
+
+
+
+
+
+
+
+
+
+
+            </p>
+        </td>
+       
+        <td>
+            @Html.DisplayFor(modelItem => item.Seller.Name)<br />
+            @Html.DisplayFor(modelItem => item.Country.Name)<br />
+
+            @Html.DisplayFor(modelItem => item.Currency.Name)<br />
+            @Html.DisplayFor(modelItem => item.State.Name)<br />
+
+
+
+
+            @Html.DisplayFor(modelItem => item.City.Name)
+        </td>
+        <td>
+            <a href="@Url.Action("Details", "Products", new { item.Slug })">
+                <img src="data:image/png;base64,@Convert.ToBase64String(item.Picture, 0, item.Picture.Length)" class="img-responsive img-thumbnail" style="width: 250px; height: 200px;" alt="" />
+            </a><br />
+            @Html.DisplayFor(modelItem => item.Ram)<br />
+            @Html.DisplayFor(modelItem => item.Processor)<br />
+
+            @Html.DisplayFor(modelItem => item.HardDisk)<br />
+
+
+            @Html.DisplayFor(modelItem => item.Condition)<br />
+
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Slug }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Slug }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Slug })
+        </td>
+    </tr>
+}
+
+</table>
